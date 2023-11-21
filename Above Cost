@@ -1,0 +1,102 @@
+REST API - The REST API allows you to interact with data in your account programmatically, rather than via the dashboard.
+AUTHENTICATION - Is handled using the Authorization header. You can authenticate using an API key.
+
+Authorization: Bearer 3910a719f15db387e7b6ba50afb4b17e	
+LIMITS - Currently, API calls are limited at 1 for every 10 minutes.	
+REQUEST SAMPLE - We will start with a basic curl example before going into the details. 
+*You will fill in your USER ID & EMAIL. Remove the ___ and replace with ID# and email.*
+Example: User ID: 8188 | Email: bd@mod.com ➡️  -d "{\"user\":8188,\"email\":\"bd@mod.com\"}"
+
+curl
+  -s -X POST https://www.maxoutdeals.com/p/it@api@deals/cmd/active
+  -H "Accept: application/json"
+  -H "Authorization: Bearer 3910a719f15db387e7b6ba50afb4b17e"
+  -H "Content-Type: application/json"
+  -d "{\"user\":___,\"email\":\"___\"}" 
+  [- You can test this at https://reqbin.com/curl]
+
+REQUEST DETAILS
+1. Curl is a program that is readily available either standalone (https://curl.se/windows/) or as part of any other language out there.
+2. Argument -s is for SILENT requests. (not required).
+3. Requests protocol must be POST and the URL endpoint must be 'https://www.maxoutdeals.com/p/it@api@deals/cmd/activeh'.
+4. Three headers are required as shown. One for JSON response, one for the JSON request and one for the authorization key.
+5. The data argument is required as shown. Use a JSON format. user, email are required as shown. 
+6. The response is all the CSV report. Check the maximum is not reached.
+7. You may get different columns depending on what is avaialable. So use column names on the first row to identify the field, and not column positions.
+
+RESPONSE SAMPLE - The response is a CSV report identical to the received items CSV export found under the receiving analytics.If there are any errors a json response is given.
+- ACCOUNT,DEAL,TITLE,FLAGS,PRICE,COMMISSION,TOTAL,DELIVERY,BATCH,LINK,LOCATIONS,SEARCH,INSTRUCTIONS,NOTES,GENERAL STORE
+
+REQUEST PHP SAMPLE
+*Remove the ____ on line 47 & replace with USER ID#*
+*Remove the ____ on line 48 & replace with Email*
+<?php
+    error_reporting(E_ALL);
+    $url = "https://www.maxoutdeals.com/p/it@api@deals/cmd/active";
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $headers = array(
+      "Content-Type: application/json",
+      "Accept: application/json",
+      "Authorization: Bearer 3910a719f15db387e7b6ba50afb4b17e"
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $data = json_encode(array(
+      'user' => ____,
+      'email' => '____' 
+    )); 
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    $return = curl_exec($curl);
+    curl_close($curl);
+    die($return);
+?>
+
+REQUEST PYTHON SAMPLE
+*Remove the ____ on line 69 & replace with USER ID#*
+*Remove the ____ on line 69 & replace with Email*
+import requests
+from requests.structures import CaseInsensitiveDict
+
+url = "https://www.maxoutdeals.com/p/it@api@deals/cmd/active"
+
+headers = CaseInsensitiveDict()
+headers["Accept"] = "application/json"
+headers["Authorization"] = "Bearer 3910a719f15db387e7b6ba50afb4b17e"
+headers["Content-Type"] = "application/json"
+
+data = '{"user":____,"email":"____"}'
+
+
+resp = requests.post(url, headers=headers, data=data)
+
+print(resp.status_code)
+
+REQUEST C#.NET SAMPLE
+*Remove the ____ on line 89 & replace with USER ID#*
+*Remove the ____ on line 89 & replace with Email*
+
+var url = "https://www.maxoutdeals.com/p/it@api@deals/cmd/active";
+
+var httpRequest = (HttpWebRequest)WebRequest.Create(url);
+httpRequest.Method = "POST";
+
+httpRequest.Accept = "application/json";
+httpRequest.Headers["Authorization"] = "Bearer 3910a719f15db387e7b6ba50afb4b17e";
+httpRequest.ContentType = "application/json";
+
+var data = "{\"user\":____,\"email\":\"____\"}";
+
+using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
+{
+   streamWriter.Write(data);
+}
+
+var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+{
+   var result = streamReader.ReadToEnd();
+}
+
+Console.WriteLine(httpResponse.StatusCode);
